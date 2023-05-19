@@ -14,7 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Generate Pipfile.lock
-        run: pipenv lock
+        run: |
+          pip install pipenv --user
+          pipenv lock
       - name: Upload Requirements File as Artifact
         uses: actions/upload-artifact@v3
         with:
