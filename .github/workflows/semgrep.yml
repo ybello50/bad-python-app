@@ -17,7 +17,7 @@ jobs:
         run: |
           pip install pipenv --user
           pipenv lock
-      - name: Upload Requirements File as Artifact
+      - name: Upload Pipfile as Artifact
         uses: actions/upload-artifact@v3
         with:
           name: pipfilelock
@@ -36,4 +36,4 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: pipfilelock
-      - run: semgrep ci --supply-chain --verbose --exclude requirements.txt
+      - run: semgrep ci --supply-chain --exclude requirements.txt
