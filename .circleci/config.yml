@@ -25,7 +25,7 @@ jobs:
           name: "Semgrep scan"
           command: | 
             echo 'export SEMGREP_COMMIT=${CIRCLE_SHA1}' >> $BASH_ENV
-            echo 'export SEMGREP_PR_ID=${CIRCLE_BUILD_NUM}' >> $BASH_ENV
+            echo 'export SEMGREP_PR_ID=${CIRCLE_PULL_REQUEST##*/}' >> $BASH_ENV
             echo 'export SEMGREP_JOB_URL=${CIRCLE_BUILD_URL}' >> $BASH_ENV
             echo 'export SEMGREP_REPO_NAME=${CIRCLE_PROJECT_REPONAME}' >> $BASH_ENV
             echo 'export SEMGREP_REPO_URL=${CIRCLE_REPOSITORY_URL}' >> $BASH_ENV
@@ -38,6 +38,12 @@ jobs:
             echo ${CIRCLE_PULL_REQUEST##*/}
             echo '$CIRCLE_PR_NUMBER'
             echo $CIRCLE_PR_NUMBER
+            echo ${CIRCLE_SHA1}
+            echo ${CIRCLE_PULL_REQUEST##*/}'
+            echo ${CIRCLE_BUILD_URL}'
+            echo ${CIRCLE_PROJECT_REPONAME}'
+            echo ${CIRCLE_REPOSITORY_URL}'
+            echo ${CIRCLE_BRANCH}'
             git fetch origin "+refs/heads/*:refs/remotes/origin/*"
             semgrep ci
 workflows:
