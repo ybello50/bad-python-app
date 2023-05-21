@@ -39,11 +39,11 @@ jobs:
             echo '$CIRCLE_PR_NUMBER'
             echo $CIRCLE_PR_NUMBER
             echo ${CIRCLE_SHA1}
-            echo ${CIRCLE_PULL_REQUEST##*/}'
-            echo ${CIRCLE_BUILD_URL}'
-            echo ${CIRCLE_PROJECT_REPONAME}'
-            echo ${CIRCLE_REPOSITORY_URL}'
-            echo ${CIRCLE_BRANCH}'
+            echo ${CIRCLE_PULL_REQUEST##*/}
+            echo ${CIRCLE_BUILD_URL}
+            echo ${CIRCLE_PROJECT_REPONAME}
+            echo ${CIRCLE_REPOSITORY_URL}
+            echo ${CIRCLE_BRANCH}
             git fetch origin "+refs/heads/*:refs/remotes/origin/*"
             semgrep ci
 workflows:
