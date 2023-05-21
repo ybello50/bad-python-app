@@ -14,7 +14,9 @@ jobs:
       - checkout
       - run: 
           name: "Semgrep scan"
-          command: | 
+          command: |
+            echo $CIRCLE_PULL_REQUEST
+            echo ${CIRCLE_PULL_REQUEST##*/}
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               echo "this is not a pull request"
               echo 'export SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN' >> $BASH_ENV
