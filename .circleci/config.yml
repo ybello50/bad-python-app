@@ -6,8 +6,8 @@ jobs:
         type: string
         default: main
     environment:
-      SEMGREP_BASELINE_REF: << parameters.default_branch >>
-#       - export SEMGREP_BASELINE_REF = "origin/main"
+#       SEMGREP_BASELINE_REF: << parameters.default_branch >>
+      - export SEMGREP_BASELINE_REF = "main"
 #       - git fetch origin "+refs/heads/*:refs/remotes/origin/*"
 
     docker:
