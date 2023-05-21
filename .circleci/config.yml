@@ -49,7 +49,7 @@ jobs:
                 echo 'export SEMGREP_JOB_URL=$CIRCLE_BUILD_URL' >> $BASH_ENV
                 semgrep ci
 workflows:
-  main:
+  full:
     when:
       or:
         - not: $CIRCLE_PULL_REQUEST
@@ -57,7 +57,7 @@ workflows:
       - semgrep-scan-full:
          context:
             - dev
-  main:
+  pr:
     when:
       or:
         - $CIRCLE_PULL_REQUEST
