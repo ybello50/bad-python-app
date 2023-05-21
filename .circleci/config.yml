@@ -51,7 +51,8 @@ jobs:
 workflows:
   full:
     when:
-      or: $CIRCLE_PULL_REQUEST
+      or: 
+        - $CIRCLE_PULL_REQUEST
     jobs:
       - semgrep-scan-full:
          context:
