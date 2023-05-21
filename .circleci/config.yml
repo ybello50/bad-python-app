@@ -6,10 +6,12 @@ jobs:
         type: string
         default: main
     environment:
-      SEMGREP_BASELINE_REF: << parameters.default_branch >>
-#       - export SEMGREP_BASELINE_REF = "main"
-#       - git fetch origin "+refs/heads/*:refs/remotes/origin/*"
-
+      if [ ${CIRCLE_PULL_REQUEST##*/} ]; then
+        SEMGREP_BASELINE_REF: << parameters.default_branch >>
+      else
+        - export SEMGREP_BASELINE_REF = "main"
+        - git fetch origin "+refs/heads/*:refs/remotes/origin/*"
+      fi
     docker:
       - image: returntocorp/semgrep
     steps:
