@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  semgrep-scan-pr:
+  semgrep-scan:
     parameters:
       default_branch:
         type: string
@@ -16,7 +16,9 @@ jobs:
           name: "Semgrep scan"
           command: | 
             echo 'export SEMGREP_COMMIT=${CIRCLE_SHA1}' >> $BASH_ENV
-            echo 'export SEMGREP_PR_ID=${CIRCLE_PULL_REQUEST##*/}' >> $BASH_ENV
+            if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+              echo 'export SEMGREP_PR_ID=${CIRCLE_PULL_REQUEST##*/}' >> $BASH_ENV
+            fi
             echo 'export SEMGREP_JOB_URL=${CIRCLE_BUILD_URL}' >> $BASH_ENV
             echo 'export SEMGREP_REPO_NAME=${CIRCLE_PROJECT_REPONAME}' >> $BASH_ENV
             echo 'export SEMGREP_REPO_URL=${CIRCLE_REPOSITORY_URL}' >> $BASH_ENV
@@ -24,49 +26,21 @@ jobs:
             echo 'export SEMGREP_BASELINE_REF="main"' >> $BASH_ENV
             echo 'export SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN' >> $BASH_ENV
             echo ${CIRCLE_SHA1}
-            echo ${CIRCLE_PULL_REQUEST##*/}
+            if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+              echo ${CIRCLE_PULL_REQUEST##*/}
+            fi
             echo ${CIRCLE_BUILD_URL}
             echo ${CIRCLE_PROJECT_REPONAME}
             echo ${CIRCLE_REPOSITORY_URL}
             echo ${CIRCLE_BRANCH}
             git fetch origin "+refs/heads/*:refs/remotes/origin/*"
             semgrep ci
-  semgrep-scan-full:
-    parameters:
-      default_branch:
-        type: string
-        default: main
-    environment:
-    docker:
-      - image: returntocorp/semgrep
-    steps:
-      - checkout
-      - run:
-          name: "Semgrep scan"
-          command: |
-                echo 'export SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN' >> $BASH_ENV
-                echo 'export SEMGREP_COMMIT=$CIRCLE_SHA1' >> $BASH_ENV
-                echo 'export SEMGREP_JOB_URL=$CIRCLE_BUILD_URL' >> $BASH_ENV
-                semgrep ci
 workflows:
-  full:
-    when:
-      or: 
-        - not: ${CIRCLE_PULL_REQUEST##*/}
+  scan:
     jobs:
-      - semgrep-scan-full:
+      - semgrep-scan:
          context:
             - dev
-  pr:
-    when:
-      or: 
-        - ${CIRCLE_PULL_REQUEST##*/}
-    jobs:
-      - semgrep-scan-pr:
-         context:
-            - dev
-
-
 # workflows:
 #   lint-build-test:
 #     when:
