@@ -52,14 +52,15 @@ workflows:
   full:
     when:
       or: 
-        - $CIRCLE_PULL_REQUEST
+        - not: ${CIRCLE_PULL_REQUEST##*/}
     jobs:
       - semgrep-scan-full:
          context:
             - dev
   pr:
     when:
-      not: $CIRCLE_PULL_REQUEST
+      or: 
+        - ${CIRCLE_PULL_REQUEST##*/}
     jobs:
       - semgrep-scan-pr:
          context:
