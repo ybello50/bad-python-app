@@ -6,9 +6,9 @@ jobs:
         type: string
         default: main
     environment:
-#       SEMGREP_BASELINE_REF: << parameters.default_branch >>
-      - export SEMGREP_BASELINE_REF = "origin/main"
-      - git fetch origin "+refs/heads/*:refs/remotes/origin/*"
+      SEMGREP_BASELINE_REF: << parameters.default_branch >>
+#       - export SEMGREP_BASELINE_REF = "origin/main"
+#       - git fetch origin "+refs/heads/*:refs/remotes/origin/*"
 
     docker:
       - image: returntocorp/semgrep
@@ -43,7 +43,7 @@ jobs:
               echo 'export SEMGREP_COMMIT=$CIRCLE_SHA1' >> $BASH_ENV
               echo 'export SEMGREP_PR_ID=${CIRCLE_PULL_REQUEST##*/}' >> $BASH_ENV
               echo 'export SEMGREP_JOB_URL=$CIRCLE_BUILD_URL' >> $BASH_ENV
-              # git fetch origin "+refs/heads/*:refs/remotes/origin/*"
+              git fetch origin "+refs/heads/*:refs/remotes/origin/*"
               semgrep ci
             fi
 workflows:
