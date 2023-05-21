@@ -12,6 +12,21 @@ jobs:
       - image: returntocorp/semgrep
     steps:
       - checkout
+	  - run:
+		  name: 'Setup env variables'
+		  command: |
+			echo 'export MY_PR_NUMBER="$CIRCLE_PR_NUMBER"' >> $BASH_ENV
+			echo 'export MY_PR_NUMBER2=${CIRCLE_PULL_REQUEST##*/}' >> $BASH_ENV
+			echo 'export MY_PR="$CIRCLE_PULL_REQUEST"' >> $BASH_ENV
+	  - run:
+		  name: 'What PR am I on?'
+		  command: echo $MY_PR
+	  - run:
+		  name: 'What is my PR number?'
+		  command: echo $MY_PR_NUMBER
+	  - run:
+		  name: 'What is my PR number2?'
+		  command: echo $MY_PR_NUMBER2
       - run: 
           name: "Semgrep scan"
           command: | 
