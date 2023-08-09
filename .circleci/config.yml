@@ -1,6 +1,6 @@
 version: 2.1
-orbs:
-  jq: circleci/jq@2.2.0
+# orbs:
+#   jq: circleci/jq@2.2.0
 jobs:
   semgrep-scan:
     parameters:
@@ -13,7 +13,7 @@ jobs:
       - image: returntocorp/semgrep
     steps:
       - checkout
-      - jq/install
+      # - jq/install
       - run: 
           name: "Semgrep scan"
           command: |
