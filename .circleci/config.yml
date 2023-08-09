@@ -7,8 +7,8 @@ jobs:
       default_branch:
         type: string
         default: main
-    environment:
-      SEMGREP_BASELINE_REF: << parameters.default_branch >>
+    # environment:
+    #   SEMGREP_BASELINE_REF: << parameters.default_branch >>
     docker:
       - image: returntocorp/semgrep
     steps:
