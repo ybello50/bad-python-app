@@ -55,6 +55,7 @@ jobs:
           name: "Create Summary JSON for Blocking findings only"
           when: always 
           command: |
+            findings_summary='{"results":[]}'
             for k in $(jq '.results | keys | .[]' findings.json); do
               value=$(jq -r ".results[$k]" findings.json);
               message=$(jq -r '.extra.message' \<<< "$value");
@@ -62,10 +63,12 @@ jobs:
               line=$(jq -r '.start.line' \<<< "$value");
               reference=$(jq -r '.extra.metadata."semgrep.url"' \<<< "$value");
               semgrep_policy=$(jq -r '.extra.metadata."semgrep.policy".slug' \<<< "$value");
+              findings_summary="$(jq --arg val "$k" .results += [$message])"
               echo $message
               echo $path
               echo $line
             done
+            echo "$findings_summary"
 
 workflows:
   scan:
