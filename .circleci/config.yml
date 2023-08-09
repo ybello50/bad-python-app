@@ -1,6 +1,6 @@
 version: 2.1
-# orbs:
-#   jq: circleci/jq@2.2.0
+orbs:
+  jq: circleci/jq@2.2.0
 jobs:
   semgrep-scan:
     parameters:
@@ -13,7 +13,7 @@ jobs:
       - image: returntocorp/semgrep
     steps:
       - checkout
-      # - jq/install
+      - jq/install
       - run: 
           name: "Semgrep scan"
           command: |
@@ -49,8 +49,22 @@ jobs:
               # echo 'export SEMGREP_PR_ID=${CIRCLE_PULL_REQUEST##*/}' >> $BASH_ENV
               echo 'export SEMGREP_JOB_URL=$CIRCLE_BUILD_URL' >> $BASH_ENV
               # git fetch origin "+refs/heads/*:refs/remotes/origin/*"
-              semgrep ci
+              semgrep ci --json --output=findings.json
             fi
+            for k in $(jq '.results | keys | .[]' findings.json); do
+              value=$(jq -r ".results[$k]" findings.json);
+              message=$(jq -r '.extra.message' \<<< "$value");
+              path=$(jq -r '.path' \<<< "$value");
+              line=$(jq -r '.start.line' \<<< "$value");
+              reference=$(jq -r '.extra.metadata."semgrep.url"' \<<< "$value");
+              semgrep_policy=$(jq -r '.extra.metadata."semgrep.policy".slug' \<<< "$value");
+              if [[ $semgrep_policy == "rule-board-block" ]]; then
+                echo $message
+                echo $path
+                echo $line
+              fi
+            done
+
 workflows:
   scan:
     jobs:
