@@ -51,6 +51,9 @@ jobs:
               # git fetch origin "+refs/heads/*:refs/remotes/origin/*"
               semgrep ci --json --output=findings.json
             fi
+      - run:
+          name: "Create Sumamry JSON for Blocking findings only"
+          command: |
             for k in $(jq '.results | keys | .[]' findings.json); do
               value=$(jq -r ".results[$k]" findings.json);
               message=$(jq -r '.extra.message' \<<< "$value");
