@@ -58,11 +58,9 @@ jobs:
               line=$(jq -r '.start.line' \<<< "$value");
               reference=$(jq -r '.extra.metadata."semgrep.url"' \<<< "$value");
               semgrep_policy=$(jq -r '.extra.metadata."semgrep.policy".slug' \<<< "$value");
-              if [[ $semgrep_policy == "rule-board-block" ]]; then
-                echo $message
-                echo $path
-                echo $line
-              fi
+              echo $message
+              echo $path
+              echo $line
             done
 
 workflows:
