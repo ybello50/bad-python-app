@@ -55,19 +55,19 @@ jobs:
           name: "Create Summary JSON for Blocking findings only"
           when: always 
           command: |
-            for k in $(jq '.results | keys | .[]' findings.json); do
-              value=$(jq -r ".results[$k]" findings.json);
+            results_array=$(for k in $(jq '.results | keys | .[]' findings.json); do
+              value=$(jq -r ".results[$k]" findings-sca.json);
               message=$(jq -r '.extra.message' \<<< "$value");
               path=$(jq -r '.path' \<<< "$value");
               line=$(jq -r '.start.line' \<<< "$value");
               reference=$(jq -r '.extra.metadata."semgrep.url"' \<<< "$value");
-              semgrep_policy=$(jq -r '.extra.metadata."semgrep.policy".slug' \<<< "$value");
-              echo $message
-              echo $path
-              echo $line
-              jq -n --arg message "$message" --arg path "$path" --arg line "$line" '{message: $message, path: $path, line: $line}'
-            done | jq -n '.items |= [inputs]'
-
+              is_it_blocking_findings=$(jq -r '.extra.sca_info.reachable' \<<< "$value");
+              if [[ $is_it_blocking_findings ]]; then
+                jq -n --arg message "$message" --arg path "$path" --arg line "$line" '{message: $message, path: $path, line: $line}'
+              fi
+            done | jq -n '.results |= [inputs]')
+            $results_array=$(jq -r '.results | select( . != null )' \<<< "$results_array")
+            echo $results_array >>> findings-summary.json
 workflows:
   scan:
     jobs:
