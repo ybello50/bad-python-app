@@ -65,7 +65,7 @@ jobs:
               if [[ $is_it_blocking_findings ]]; then
                 jq -n --arg message "$message" --arg path "$path" --arg line "$line" '{message: $message, path: $path, line: $line}'
               fi
-            done | jq -n '.results |= [inputs]')
+            done | jq -n '.results |= [inputs]');
             echo $results_array >>> findings-summary.json
 workflows:
   scan:
