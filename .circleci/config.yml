@@ -49,11 +49,11 @@ jobs:
               # echo 'export SEMGREP_PR_ID=${CIRCLE_PULL_REQUEST##*/}' >> $BASH_ENV
               echo 'export SEMGREP_JOB_URL=$CIRCLE_BUILD_URL' >> $BASH_ENV
               # git fetch origin "+refs/heads/*:refs/remotes/origin/*"
-              set +e 
               semgrep ci --json --output=findings.json
             fi
       - run:
           name: "Create Summary JSON for Blocking findings only"
+          when: always 
           command: |
             for k in $(jq '.results | keys | .[]' findings.json); do
               value=$(jq -r ".results[$k]" findings.json);
