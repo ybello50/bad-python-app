@@ -56,7 +56,7 @@ jobs:
           when: always 
           command: |
             results_array=$(for k in $(jq '.results | keys | .[]' findings.json); do
-              value=$(jq -r ".results[$k]" findings-sca.json);
+              value=$(jq -r ".results[$k]" findings.json);
               message=$(jq -r '.extra.message' \<<< "$value");
               path=$(jq -r '.path' \<<< "$value");
               line=$(jq -r '.start.line' \<<< "$value");
