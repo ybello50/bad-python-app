@@ -65,7 +65,7 @@ jobs:
               echo $message
               echo $path
               echo $line
-              jq -n --arg message "$message" --arg path "$path" --arg line "$line" '{name: $name, path: $path, line: $line}'
+              jq -n --arg message "$message" --arg path "$path" --arg line "$line" '{message: $message, path: $path, line: $line}'
             done | jq -n '.items |= [inputs]'
 
 workflows:
