@@ -67,6 +67,7 @@ jobs:
               fi
             done | jq -n '.results |= [inputs]');
             echo $results_array > "findings_summary.json";
+            echo $results_array;
 workflows:
   scan:
     jobs:
